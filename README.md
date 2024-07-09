@@ -9,7 +9,7 @@ nwc_info = processNWCstring( "nostr+walletconnect://2fbe00e6698e717593febba15a68
 
 # Make an invoice for 100 sats with description "hello world!"
 
-```
+```python3
 amnt = 100
 desc = "hello world!"
 invoice_info = makeInvoice( nwc_info, amnt, desc )
@@ -17,7 +17,7 @@ invoice_info = makeInvoice( nwc_info, amnt, desc )
 
 # Check an invoice's status
 
-```
+```python3
 invoice = "lntb2500n1pwxlkl5pp5g8hz28tlf950ps942lu3dknfete8yax2ctywpwjs872x9kngvvuqdqage5hyum5yp6x2um5yp5kuan0d93k2cqzyskdc5s2ltgm9kklz42x3e4tggdd9lcep2s9t2yk54gnfxg48wxushayrt52zjmua43gdnxmuc5s0c8g29ja9vnxs6x3kxgsha07htcacpmdyl64"
 invoice_info = checkInvoice( nwc_info, invoice )
 ```
@@ -26,7 +26,7 @@ invoice_info = checkInvoice( nwc_info, invoice )
 
 This method will return false if a payment did not succeed yet. If the payment did succeed, it will return the invoice preimage.
 
-```
+```python3
 invoice = "lntb2500n1pwxlkl5pp5g8hz28tlf950ps942lu3dknfete8yax2ctywpwjs872x9kngvvuqdqage5hyum5yp6x2um5yp5kuan0d93k2cqzyskdc5s2ltgm9kklz42x3e4tggdd9lcep2s9t2yk54gnfxg48wxushayrt52zjmua43gdnxmuc5s0c8g29ja9vnxs6x3kxgsha07htcacpmdyl64"
 invoice_info = didPaymentSucceed( nwc_info, invoice )
 ```
@@ -37,7 +37,7 @@ Originally my javascript library, of which this is a port, had a method called p
 
 If the invoice you're paying is amountless, add an amount to your payment by modifying the variable var amnt.
 
-```
+```python3
 invoice = "lntb2500n1pwxlkl5pp5g8hz28tlf950ps942lu3dknfete8yax2ctywpwjs872x9kngvvuqdqage5hyum5yp6x2um5yp5kuan0d93k2cqzyskdc5s2ltgm9kklz42x3e4tggdd9lcep2s9t2yk54gnfxg48wxushayrt52zjmua43gdnxmuc5s0c8g29ja9vnxs6x3kxgsha07htcacpmdyl64"
 amnt = None
 tryToPayInvoice( nwc_info, invoice, amnt )
