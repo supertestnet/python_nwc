@@ -7,13 +7,13 @@ The library has three dependencies:
 pip3 install websocket-client secp256k1 pycryptodome==3.10.1
 ```
 
-The websocket-client library is used for managing a connection to a nostr relay and sending/receiving events
+The websocket-client library manages a connection to a nostr relay and sends/receives events
 
-The secp256k1 library is used for generating cryptographic keys and signing event messages
+The secp256k1 library generates cryptographic keys and signs event messages
 
-The pycryptodome library is used for encrypting and decrypting nostr dms
+The pycryptodome library encrypts and decrypts nostr dms
 
-It also uses the following "built in" imports that should not need to be installed via pip3 because they are already included by default in python3:
+I also use the some imports that should not need to be installed via pip3 because they are already included by default in python3:
 
 ```
 import json
