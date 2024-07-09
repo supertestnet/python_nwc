@@ -4,9 +4,7 @@ import json
 import base64
 import time
 import math
-import os
 import hashlib
-import binascii
 # pip3 install secp256k1
 from secp256k1 import PrivateKey, PublicKey
 # pip3 install pycryptodome==3.10.1
