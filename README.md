@@ -3,7 +3,7 @@ A python3 library for working with Nostr Wallet Connect
 
 # Dependencies
 The library has three dependencies:
-```
+```bash
 pip3 install websocket-client secp256k1 pycryptodome==3.10.1
 ```
 
