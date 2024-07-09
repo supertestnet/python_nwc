@@ -1,4 +1,3 @@
-import asyncio
 # pip3 install websocket-client
 from websocket import create_connection
 import json
@@ -8,9 +7,6 @@ import math
 import os
 import hashlib
 import binascii
-# pip3 install nest_asyncio
-import nest_asyncio
-nest_asyncio.apply()
 # pip3 install secp256k1
 from secp256k1 import PrivateKey, PublicKey
 # pip3 install pycryptodome==3.10.1
