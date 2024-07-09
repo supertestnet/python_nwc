@@ -57,18 +57,6 @@ def decrypt( privkey, pubkey, ciphertext ):
     plaintext = unpad( plaintext )
     return plaintext
 
-nwc_string = 'nostr+walletconnect://69effe7b49a6dd5cf525bd0905917a5005ffe480b58eeb8e861418cf3ae760d9?relay=wss://relay.getalby.com/v1&secret=f62ea98833be1f04b1b8364dfa70f6b4efb8f6a2805424637b8ea9ca31f0b13b&lud16=greensnowflake43@getalby.com'
-
-keypair = [PrivateKey()]
-keypair.append( keypair[ 0 ].pubkey.serialize().hex()[ 2: ] )
-keypair[ 0 ] = keypair[ 0 ].serialize()
-
-nwc_obj = {
-    "app_privkey": keypair[ 0 ],
-    "app_pubkey": keypair[ 1 ],
-    "relay": "wss://relay.damus.io",
-}
-
 def sha256( text_to_hash ):
 	m = hashlib.sha256()
 	m.update(bytes(text_to_hash, 'UTF-8'))
