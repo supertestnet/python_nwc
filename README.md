@@ -13,6 +13,17 @@ The secp256k1 library is used for generating cryptographic keys and signing even
 
 The pycryptodome library is used for encrypting and decrypting nostr dms
 
+It also uses the following "built in" imports that should not need to be installed via pip3 because they are already included by default in python3:
+
+```
+import json
+import base64
+import time
+import math
+import hashlib
+import threading
+```
+
 # Use it like this
 
 ```python3
