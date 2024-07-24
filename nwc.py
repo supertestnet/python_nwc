@@ -195,12 +195,19 @@ def makeInvoice( nwc_obj, amt, desc ):
     dobj = json.loads( drsp )
     return dobj
 
-def checkInvoice( nwc_obj, invoice ):
+def checkInvoice(nwc_obj, invoice=None, payment_hash=None):
+    if invoice is None and payment_hash is None:
+        raise ValueError("Either 'invoice' or 'payment_hash' must be provided")
+    
+    params = {}
+    if invoice is not None:
+        params["invoice"] = invoice
+    if payment_hash is not None:
+        params["payment_hash"] = payment_hash
+
     msg = json.dumps({
         "method": "lookup_invoice",
-        "params": {
-            "invoice": invoice,
-        }
+        "params": params
     })
     emsg = encrypt( nwc_obj[ "app_privkey" ], nwc_obj[ "wallet_pubkey" ], msg );
     obj = {
@@ -257,7 +264,102 @@ def tryToPayInvoice( nwc_obj, invoice, amnt = None ):
     event = json.dumps( ["EVENT", event], separators=( ',', ':' ) )
     sendEvent( event, nwc_obj )
 
+def getInfo( nwc_obj ):
+    msg = {
+        "method": "get_info"
+    }
+    msg = json.dumps( msg )
+    emsg = encrypt( nwc_obj[ "app_privkey" ], nwc_obj[ "wallet_pubkey" ], msg );
+    obj = {
+        "kind": 23194,
+        "content": emsg,
+        "tags": [ [ "p", nwc_obj[ "wallet_pubkey" ] ] ],
+        "created_at": math.floor( time.time() ),
+        "pubkey": nwc_obj[ "app_pubkey" ],
+    }
+    event = getSignedEvent( obj, nwc_obj[ "app_privkey" ] )
+    eid = event[ "id" ]
+    event = json.dumps( ["EVENT", event], separators=( ',', ':' ) )
+    val = [False]
+    download_thread = threading.Thread( target=getResponse, name="Background", args=( nwc_obj, eid, val ) )
+    download_thread.start()
+    sendEvent( event, nwc_obj )
+    for i in [1,2,3]:
+        if ( not val[ 0 ] ):
+            time.sleep( 1 )
+            continue
+    response = val[ 0 ]
+    ersp = response[ "content" ]
+    drsp = decrypt( nwc_obj[ "app_privkey" ], nwc_obj[ "wallet_pubkey" ], ersp )
+    dobj = json.loads( drsp )
+    return dobj
+
+def listTx( nwc_obj, params = {} ):
+    msg = {
+        "method": "list_transactions",
+        "params": params
+    }
+    msg = json.dumps( msg )
+    emsg = encrypt( nwc_obj[ "app_privkey" ], nwc_obj[ "wallet_pubkey" ], msg );
+    obj = {
+        "kind": 23194,
+        "content": emsg,
+        "tags": [ [ "p", nwc_obj[ "wallet_pubkey" ] ] ],
+        "created_at": math.floor( time.time() ),
+        "pubkey": nwc_obj[ "app_pubkey" ],
+    }
+    event = getSignedEvent( obj, nwc_obj[ "app_privkey" ] )
+    eid = event[ "id" ]
+    event = json.dumps( ["EVENT", event], separators=( ',', ':' ) )
+    val = [False]
+    download_thread = threading.Thread( target=getResponse, name="Background", args=( nwc_obj, eid, val ) )
+    download_thread.start()
+    sendEvent( event, nwc_obj )
+    for i in [1,2,3]:
+        if ( not val[ 0 ] ):
+            time.sleep( 1 )
+            continue
+    response = val[ 0 ]
+    ersp = response[ "content" ]
+    drsp = decrypt( nwc_obj[ "app_privkey" ], nwc_obj[ "wallet_pubkey" ], ersp )
+    dobj = json.loads( drsp )
+    return dobj
+
+
+def getBalance( nwc_obj ):
+    msg = {
+        "method": "get_balance"
+    }
+    msg = json.dumps( msg )
+    emsg = encrypt( nwc_obj[ "app_privkey" ], nwc_obj[ "wallet_pubkey" ], msg );
+    obj = {
+        "kind": 23194,
+        "content": emsg,
+        "tags": [ [ "p", nwc_obj[ "wallet_pubkey" ] ] ],
+        "created_at": math.floor( time.time() ),
+        "pubkey": nwc_obj[ "app_pubkey" ],
+    }
+    event = getSignedEvent( obj, nwc_obj[ "app_privkey" ] )
+    eid = event[ "id" ]
+    event = json.dumps( ["EVENT", event], separators=( ',', ':' ) )
+    val = [False]
+    download_thread = threading.Thread( target=getResponse, name="Background", args=( nwc_obj, eid, val ) )
+    download_thread.start()
+    sendEvent( event, nwc_obj )
+    for i in [1,2,3]:
+        if ( not val[ 0 ] ):
+            time.sleep( 1 )
+            continue
+    response = val[ 0 ]
+    ersp = response[ "content" ]
+    drsp = decrypt( nwc_obj[ "app_privkey" ], nwc_obj[ "wallet_pubkey" ], ersp )
+    dobj = json.loads( drsp )
+    return dobj
+
+
 # print( makeInvoice( processNWCstring( nwc_string ), 100, "test" ) )
-# print( checkInvoice( processNWCstring( nwc_string ), "lnbc1u1png6lw0pp5h4l73ajf4u548ktalztfwt7k9wtp9xhgqs6t0my0mw450nfkmnrsdq8w3jhxaqcqzzsxqyz5vqsp5asqxxjr2uhsfxyjwt2gxrq38dejkr76rmzl0zstjqlx8rrlcqpns9qxpqysgq22dwgadd7xnsnn8jzwkfxwy7nwclzt4d8wa3adrml83a0nvgy2hzm565k4qn0rcrzx7n2j8dszq9yqvhdx2z0xes77j5e480clx6d7cq2vvqj5" ) )
+# print( checkInvoice( processNWCstring( nwc_string ), invoice="lnbc1u1png6lw0pp5h4l73ajf4u548ktalztfwt7k9wtp9xhgqs6t0my0mw450nfkmnrsdq8w3jhxaqcqzzsxqyz5vqsp5asqxxjr2uhsfxyjwt2gxrq38dejkr76rmzl0zstjqlx8rrlcqpns9qxpqysgq22dwgadd7xnsnn8jzwkfxwy7nwclzt4d8wa3adrml83a0nvgy2hzm565k4qn0rcrzx7n2j8dszq9yqvhdx2z0xes77j5e480clx6d7cq2vvqj5" ) )
 # print( didPaymentSucceed( processNWCstring( nwc_string ), "lnbc700n1pngmqvkpp57yg7u02n2pxack552mwdl5k8derwsyrgh2uft0lptqvcw8qv9l0qdpuge6kuerfdenjqsrnw4cx2un5v4ehgmn9wssx7m3qwd6xzcmtv4ezumn9waescqzzsxqrrsssp5uy70kfvlwfw4xhlu0k7hr7luq0qwgl5sdc9lyk4aqxvqzqqesjes9qyyssq9w7dyt6e64dyhws70qkvnauq59vmkh9lt4j5t598x3f7xzzv5edyg2g0rtdphtqmkqq3xja27kz4gvdgdy7qeymtms32d82gpmtekvspeyp4rq" ) )
 # print( tryToPayInvoice( processNWCstring( nwc_string ), "lnbc700n1pngmqvkpp57yg7u02n2pxack552mwdl5k8derwsyrgh2uft0lptqvcw8qv9l0qdpuge6kuerfdenjqsrnw4cx2un5v4ehgmn9wssx7m3qwd6xzcmtv4ezumn9waescqzzsxqrrsssp5uy70kfvlwfw4xhlu0k7hr7luq0qwgl5sdc9lyk4aqxvqzqqesjes9qyyssq9w7dyt6e64dyhws70qkvnauq59vmkh9lt4j5t598x3f7xzzv5edyg2g0rtdphtqmkqq3xja27kz4gvdgdy7qeymtms32d82gpmtekvspeyp4rq" ) )
+# print( listTx( processNWCstring( nwc_string, { "type": "outgoing"} ) ) )
+# print( getBalance( processNWCstring( nwc_string ) ) )
