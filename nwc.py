@@ -237,7 +237,7 @@ def checkInvoice(nwc_obj, invoice=None, payment_hash=None):
     # {error: {code: "INTERNAL", message: "Something went wrong while looking up invoice: "}, result_type: "lookup_invoice"}
 
 def didPaymentSucceed( nwc_obj, invoice ):
-	invoice_info = checkInvoice( nwc_obj, invoice )
+	invoice_info = checkInvoice( nwc_obj, invoice=invoice )
 	if ( invoice_info and not ( "error" in invoice_info ) and ( "result" in invoice_info ) and ( "preimage" in invoice_info[ "result" ] ) ):
 	    return invoice_info[ "result" ][ "preimage" ]
 	return False
